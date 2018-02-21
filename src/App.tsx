@@ -1,22 +1,31 @@
-import * as React from 'react';
-import './App.css';
+import * as React from "react";
 
-const logo = require('./logo.svg');
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+const App = () => (
+    <Router>
+        <div>
+            <h2>Github Repos</h2>
+            <ul>
+                <li>
+                    <Link to="/kubernetes/kubernetes">kubernetes/kubernetes</Link>
+                </li>
+                <li>
+                    <Link to="/facebook/react">facebook/react</Link>
+                </li>
+            </ul>
+            <Route path="/:userId/:repoName" component={Child} />{" "}
+        </div>
+    </Router>
+);
 
+const Child = ({ match }) => (
+    <div>
+        <h3>
+            ID: {match.params.userId}/{match.params.repoName}
+        </h3>
+    </div>
+);
+
+export { Child };
 export default App;
