@@ -1,31 +1,58 @@
 import * as React from "react";
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import { Button } from "patternfly-react";
 
-const App = () => (
-    <Router>
-        <div>
-            <h2>Github Repos</h2>
-            <ul>
-                <li>
-                    <Link to="/kubernetes/kubernetes">kubernetes/kubernetes</Link>
-                </li>
-                <li>
-                    <Link to="/facebook/react">facebook/react</Link>
-                </li>
-            </ul>
-            <Route path="/:userId/:repoName" component={Child} />{" "}
-        </div>
-    </Router>
+interface AppState {
+  clickCounter: number;
+}
+
+class Main extends React.Component<{}, AppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      clickCounter: 0
+    };
+  }
+
+  render() {
+    return (
+      <Switch>
+        <Route
+          exact={true}
+          path="/"
+          render={props => (
+            <Home
+              {...props}
+              onClickHandler={this.onClickHandler}
+              counter={this.state.clickCounter}
+            />
+          )}
+        />
+        <Route exact={true} path="/:userId/:repoName" component={Child} />
+      </Switch>
+    );
+  }
+
+  onClickHandler = event => {
+    this.setState(current => ({ clickCounter: current.clickCounter + 1 }));
+  };
+}
+
+const Home = ({ onClickHandler, counter }) => (
+  <div>
+    <p>Home</p>
+    <p>Click counter: {counter}</p>
+    <Button onClick={onClickHandler}>Submit</Button>
+  </div>
 );
 
 const Child = ({ match }) => (
-    <div>
-        <h3>
-            ID: {match.params.userId}/{match.params.repoName}
-        </h3>
-    </div>
+  <div>
+    <h3>
+      Repo: {match.params.userId}/{match.params.repoName}
+    </h3>
+  </div>
 );
 
-export { Child };
-export default App;
+export { Main, Child, Home };
